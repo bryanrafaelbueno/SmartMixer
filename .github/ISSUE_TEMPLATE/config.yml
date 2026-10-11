@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Serial protocol documentation
+    url: https://github.com/bryanrafaelbueno/SmartMixer/blob/main/docs/PROTOCOL.md
+    about: Frames, commands, telemetry and the default pin map
+  - name: Releases and installer downloads
+    url: https://github.com/bryanrafaelbueno/SmartMixer/releases
+    about: Download the latest MSI installer and signed Firefox extension

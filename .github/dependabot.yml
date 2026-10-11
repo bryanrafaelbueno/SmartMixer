@@ -1,0 +1,26 @@
+version: 2
+updates:
+  - package-ecosystem: nuget
+    directory: /src/SmartMixer
+    schedule:
+      interval: monthly
+  - package-ecosystem: nuget
+    directory: /src/SmartMixer.Core
+    schedule:
+      interval: monthly
+  - package-ecosystem: nuget
+    directory: /tests/SmartMixer.Tests
+    schedule:
+      interval: monthly
+  - package-ecosystem: nuget
+    directory: /firefox/native-host
+    schedule:
+      interval: monthly
+  - package-ecosystem: nuget
+    directory: /installer
+    schedule:
+      interval: monthly
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

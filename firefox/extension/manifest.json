@@ -1,0 +1,29 @@
+{
+  "manifest_version": 2,
+  "name": "SmartMixer Integration",
+  "version": "1.0.1",
+  "description": "Shares tab title, domain, favicon, audio and mute state with the local SmartMixer application.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "brthy467@gmail.com",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": ["browsingActivity"]
+      }
+    },
+    "gecko_android": {
+      "strict_min_version": "142.0"
+    }
+  },
+  "permissions": [
+    "nativeMessaging",
+    "sessions",
+    "tabs",
+    "alarms",
+    "scripting",
+    "<all_urls>"
+  ],
+  "background": {
+    "scripts": ["background.js"]
+  }
+}

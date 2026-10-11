@@ -1,0 +1,110 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to build (for example 1.0.1). Leave empty to only build artifacts without publishing a release."
+        required: false
+        default: ""
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build MSI and publish release
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Resolve version
+        id: version
+        shell: pwsh
+        run: |
+          if ($env:GITHUB_REF_TYPE -eq 'tag') {
+            $version = $env:GITHUB_REF_NAME -replace '^v', ''
+          } elseif ('${{ inputs.version }}'.Trim().Length -gt 0) {
+            $version = '${{ inputs.version }}'.Trim()
+          } else {
+            $version = '0.0.0'
+          }
+          if ($version -notmatch '^\d+\.\d+\.\d+$') {
+            throw "Version '$version' must use the form major.minor.patch."
+          }
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
+      - name: Stamp version into manifests
+        if: steps.version.outputs.version != '0.0.0'
+        shell: pwsh
+        run: ./scripts/Set-Version.ps1 -Version ${{ steps.version.outputs.version }}
+
+      - name: Build MSI installer
+        shell: pwsh
+        run: |
+          $parameters = @{ Version = '${{ steps.version.outputs.version }}' }
+          if (Test-Path firefox/signed/SmartMixer.signed.xpi) {
+            $parameters.FirefoxXpiPath = (Resolve-Path firefox/signed/SmartMixer.signed.xpi).Path
+          }
+          ./installer/Build-Msi.ps1 @parameters
+
+      - name: Package Firefox extension for AMO
+        shell: pwsh
+        run: ./scripts/Build-FirefoxExtension.ps1 -OutputPath "firefox/dist/SmartMixer-firefox-${{ steps.version.outputs.version }}.zip"
+
+      - name: Generate checksums
+        shell: pwsh
+        run: |
+          $files = @(
+            "installer/dist/Release/SmartMixerSetup.msi",
+            "firefox/dist/SmartMixer-firefox-${{ steps.version.outputs.version }}.zip"
+          )
+          $lines = foreach ($file in $files) {
+            $hash = (Get-FileHash $file -Algorithm SHA256).Hash.ToLowerInvariant()
+            "$hash  $(Split-Path $file -Leaf)"
+          }
+          $lines | Set-Content -Path SHA256SUMS.txt -Encoding ascii
+
+      - name: Upload workflow artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: SmartMixer-${{ steps.version.outputs.version }}
+          path: |
+            installer/dist/Release/SmartMixerSetup.msi
+            firefox/dist/SmartMixer-firefox-${{ steps.version.outputs.version }}.zip
+            SHA256SUMS.txt
+          if-no-files-found: error
+
+      - name: Publish GitHub release
+        if: github.ref_type == 'tag' || inputs.version != ''
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $assets = @(
+            "installer/dist/Release/SmartMixerSetup.msi",
+            "firefox/dist/SmartMixer-firefox-${{ steps.version.outputs.version }}.zip",
+            "SHA256SUMS.txt"
+          )
+          if ('${{ github.ref_type }}' -eq 'tag') {
+            $tag = $env:GITHUB_REF_NAME
+            gh release create $tag $assets --title "SmartMixer $tag" --generate-notes --verify-tag
+          } else {
+            $tag = "v${{ steps.version.outputs.version }}"
+            gh release create $tag $assets --title "SmartMixer $tag" --generate-notes --target $env:GITHUB_SHA
+          }

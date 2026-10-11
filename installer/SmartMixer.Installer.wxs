@@ -1,0 +1,73 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+  <Package
+    Name="SmartMixer"
+    Manufacturer="SmartMixer"
+    Version="$(var.PackageVersion)"
+    UpgradeCode="B2B4DB39-844A-4996-A5F5-A9C047A3812B"
+    Scope="perMachine"
+    InstallerVersion="500"
+    Compressed="yes">
+    <SummaryInformation Description="SmartMixer Windows audio mixer" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of SmartMixer is already installed." />
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
+    <Icon Id="SmartMixerIcon" SourceFile="$(var.AppPublishDir)\Images\SmartMixer.ico" />
+    <Property Id="ARPPRODUCTICON" Value="SmartMixerIcon" />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="SmartMixer" />
+    </StandardDirectory>
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ProgramMenuDir" Name="SmartMixer" />
+    </StandardDirectory>
+
+    <Feature Id="SmartMixerFeature" Title="SmartMixer" Level="1">
+      <ComponentGroupRef Id="SmartMixerFiles" />
+      <ComponentGroupRef Id="SmartMixerShortcuts" />
+    </Feature>
+
+    <UI>
+      <ui:WixUI Id="WixUI_Minimal" />
+    </UI>
+
+    <SetProperty Id="WixUnelevatedShellExecTarget" Value="[INSTALLFOLDER]SmartMixer.exe" Before="LaunchSetupAssistant" Sequence="execute" />
+    <CustomAction
+      Id="LaunchSetupAssistant"
+      BinaryRef="Wix4UtilCA_$(sys.BUILDARCHSHORT)"
+      DllEntry="WixUnelevatedShellExec"
+      Execute="immediate"
+      Return="ignore" />
+
+    <InstallExecuteSequence>
+      <Custom Action="LaunchSetupAssistant" After="InstallFinalize" Condition="NOT Installed AND NOT REMOVE" />
+    </InstallExecuteSequence>
+  </Package>
+
+  <Fragment>
+    <ComponentGroup Id="SmartMixerFiles">
+      <Files Include="$(var.AppPublishDir)\**" Directory="INSTALLFOLDER" />
+    </ComponentGroup>
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="SmartMixerShortcuts" Directory="ProgramMenuDir">
+      <Component Id="SmartMixerStartMenuShortcut" Guid="F2A85CCB-A28D-4F79-93FC-6DF8BB96E9D0">
+        <Shortcut
+          Id="SmartMixerStartMenuShortcut"
+          Name="SmartMixer"
+          Target="[INSTALLFOLDER]SmartMixer.exe"
+          WorkingDirectory="INSTALLFOLDER"
+          Icon="SmartMixerIcon"
+          Advertise="no" />
+        <RemoveFolder Id="RemoveSmartMixerStartMenuFolder" On="uninstall" />
+        <RegistryValue
+          Root="HKCU"
+          Key="Software\SmartMixer"
+          Name="Installed"
+          Type="integer"
+          Value="1"
+          KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

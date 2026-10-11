@@ -1,0 +1,14 @@
+SmartMixer installer firmware and programming tools
+
+Arduino AVR Boards 1.8.6
+The bundled firmware is compiled against Arduino AVR Boards 1.8.6, distributed under GPL-2.0-or-later.
+The corresponding SmartMixer sketch is included in firmware\SmartMixerProMicro.ino.
+Arduino AVR core source: https://github.com/arduino/ArduinoCore-avr/tree/1.8.6
+
+AVRDUDE 6.3.0-arduino17
+The bundled programmer is the AVRDUDE build distributed by Arduino for its AVR platform.
+AVRDUDE source and license: https://github.com/arduino/avrdude
+
+libusb-win32
+The bundled libusb0.dll is distributed with Arduino's AVRDUDE package.
+Source and license information: https://github.com/mcuee/libusb-win32

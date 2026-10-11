@@ -1,0 +1,19 @@
+<Project Sdk="WixToolset.Sdk/5.0.2">
+  <PropertyGroup>
+    <OutputType>Package</OutputType>
+    <OutputName>SmartMixerSetup</OutputName>
+    <Platform>x64</Platform>
+    <InstallerPlatform>x64</InstallerPlatform>
+    <!-- Neutral language metadata in self-contained WinUI binaries does not pass ICE03. -->
+    <SuppressIces>ICE03</SuppressIces>
+    <OutputPath>$(MSBuildProjectDirectory)\dist\$(Configuration)\</OutputPath>
+    <AppPublishDir Condition="'$(AppPublishDir)' == ''">$(MSBuildProjectDirectory)\staging</AppPublishDir>
+    <!-- Overridden by the release workflow (scripts/Set-Version.ps1 or -p:PackageVersion). -->
+    <PackageVersion Condition="'$(PackageVersion)' == ''">1.0.0</PackageVersion>
+    <DefineConstants>AppPublishDir=$(AppPublishDir);PackageVersion=$(PackageVersion)</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="WixToolset.UI.wixext" Version="5.0.2" />
+    <PackageReference Include="WixToolset.Util.wixext" Version="5.0.2" />
+  </ItemGroup>
+</Project>

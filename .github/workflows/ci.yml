@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: Unit tests
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore test project
+        run: dotnet restore tests/SmartMixer.Tests/SmartMixer.Tests.csproj
+
+      - name: Run tests
+        run: dotnet test tests/SmartMixer.Tests/SmartMixer.Tests.csproj --configuration Release --no-restore --verbosity normal
+
+  build:
+    name: Build app and Firefox bridge
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Publish WinUI 3 application (unpackaged, self-contained)
+        run: >
+          msbuild src/SmartMixer/SmartMixer.csproj /restore /t:Publish
+          /p:Configuration=Release /p:Platform=x64 /p:RuntimeIdentifier=win-x64
+          /p:SelfContained=true /p:SmartMixerMsi=true /p:WindowsPackageType=None
+          /p:EnableMsixTooling=false /p:GenerateAppxPackageOnBuild=false
+          /p:WindowsAppSDKSelfContained=true /p:ProjectPriFileName=resources.pri
+          /p:DebugSymbols=false /p:DebugType=None /v:minimal
+
+      - name: Publish Firefox native messaging host
+        run: >
+          dotnet publish firefox/native-host/SmartMixer.NativeHost.csproj
+          --configuration Release --runtime win-x64 --self-contained true
+          -p:PublishSingleFile=true -p:DebugSymbols=false -p:DebugType=None
+
+      - name: Validate Firefox extension package
+        shell: pwsh
+        run: ./scripts/Build-FirefoxExtension.ps1

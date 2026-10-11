@@ -1,14 +1,23 @@
-![SmartMixer](src/SmartMixer/Images/SplashScreen.png)
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/SmartMixerWhite.png">
+    <img src="./assets/SmartMixerDark.png" alt="SmartMixer" width="600">
+  </picture>
+</p>
 
-**Seven-channel hardware mixer for Windows**  
-Turn real knobs into per-application volume — native, lightweight and open source
+<p align="center">
+  <b>Seven-channel hardware mixer for Windows</b><br/>
+  Turn real knobs into per-application volume — native, lightweight and open source
+</p>
 
-![Status](https://img.shields.io/badge/status-released-green)
-![License](https://img.shields.io/badge/license-MIT-green)
-![Platform](https://img.shields.io/badge/platform-Windows%2011-0078D4)
-![.NET](https://img.shields.io/badge/.NET-8.0-512BD4)
-![WinUI 3](https://img.shields.io/badge/WinUI%203-Windows%20App%20SDK-0078D4)
-[![CI](https://github.com/bryanrafaelbueno/SmartMixer/actions/workflows/ci.yml/badge.svg)](https://github.com/bryanrafaelbueno/SmartMixer/actions/workflows/ci.yml)
+<p align="center">
+  <img alt="Status" src="https://img.shields.io/badge/status-Released-green">
+  <img alt="License" src="https://img.shields.io/badge/license-MIT-green">
+  <img alt=".NET 8.0" src="https://img.shields.io/badge/.NET-8.0-512BD4">
+  <img alt="WinUI 3" src="https://img.shields.io/badge/WinUI%203-Windows%20App%20SDK-0078D4">
+  <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%2011-0078D4">
+  <a href="https://github.com/bryanrafaelbueno/SmartMixer/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/bryanrafaelbueno/SmartMixer/actions/workflows/ci.yml/badge.svg"></a>
+</p>
 
 ---
 
@@ -116,6 +125,7 @@ The full frame reference (telemetry, commands, timing, resync rules) is in
 ```text
 smartmixer/
 ├── .github/                     CI, tagged releases, issue and PR templates
+├── assets/                      README wordmark (dark and light themes)
 ├── docs/                        Serial protocol reference
 ├── firefox/
 │   ├── extension/               WebExtension source (tab audio → app)
@@ -397,9 +407,13 @@ MIT © SmartMixer Contributors
 
 ## ☕ Support the project
 
-If this project helps you, consider supporting development:  
-[![Buy Me A Coffee](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=☕&slug=bryanrafaelbueno&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff)](https://www.buymeacoffee.com/bryanrafaelbueno)
+If this project helps you, consider supporting development: </br>
+<a href="https://www.buymeacoffee.com/bryanrafaelbueno" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a> </br>
 
 ---
 
-[![Feito no Brasil](https://selo.feitonobrasil.dev.br/pt-br/branco-colorido/1x.svg)](https://feitonobrasil.dev.br)
+<p align="center">
+<a href="https://feitonobrasil.dev.br" aria-label="Feito no Brasil">
+  <img src="https://selo.feitonobrasil.dev.br/pt-br/branco-colorido/1x.svg" alt="Feito no Brasil" width="250" height="120" loading="lazy" />
+</a>
+</p>

@@ -1,0 +1,38 @@
+# ---------------------------------------------------------------------------
+# SmartMixer - files that should never be committed
+# ---------------------------------------------------------------------------
+
+# Build outputs
+**/bin/
+**/obj/
+**/publish/
+
+# Test outputs
+TestResults/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.VC.db
+*.VC.opendb
+
+# Installer and packaging outputs
+installer/dist/
+installer/staging/
+installer/payload/
+firefox/dist/
+
+# Signed extension copies (the canonical one lives in firefox/signed/)
+*.signed.xpi
+!firefox/signed/*.signed.xpi
+
+# Logs and crash dumps
+*.log
+*.dmp
+
+# Operating system junk
+Thumbs.db
+Desktop.ini

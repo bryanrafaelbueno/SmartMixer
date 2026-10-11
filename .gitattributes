@@ -1,0 +1,13 @@
+# Repository-wide line-ending and binary handling.
+# SmartMixer targets Windows only, so text files are checked out with CRLF
+# and normalized to LF in the repository.
+* text=auto eol=crlf
+
+# Binary assets
+*.png binary
+*.ico binary
+*.xpi binary
+*.zip binary
+*.hex binary
+*.dll binary
+*.exe binary
